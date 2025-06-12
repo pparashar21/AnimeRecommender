@@ -53,6 +53,7 @@ class DataIngestion:
             raise ExceptionHandler(e, sys)
         
 if __name__ == "__main__":
+    # Testing flow of data ingestion
     d1 = DataIngestionConfig()
     demo = DataIngestion(d1)
     sol = demo.ingest_data()
