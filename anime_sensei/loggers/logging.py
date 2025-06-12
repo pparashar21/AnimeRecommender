@@ -1,7 +1,7 @@
 import os
 import logging
 from datetime import datetime
-from anime_recommender.constant import *
+from anime_sensei.constant import *
 
 logs_dir = os.path.join(os.getcwd(), LOGS_DIRECTORY)
 os.makedirs(logs_dir, exist_ok=True)

@@ -1,0 +1,6 @@
+[ 2025-06-12 15:05:07,843 ] 38 root - INFO - Saving DataFrame to file: Artifacts/Data_ingestion/Feature_store/Anime_Desctiption.csv
+[ 2025-06-12 15:05:08,046 ] 42 root - INFO - DataFrame saved successfully to Artifacts/Data_ingestion/Feature_store/Anime_Desctiption.csv.
+[ 2025-06-12 15:05:08,046 ] 38 root - INFO - Saving DataFrame to file: Artifacts/Data_ingestion/Feature_store/Anime_Ratings.csv
+[ 2025-06-12 15:05:30,243 ] 42 root - INFO - DataFrame saved successfully to Artifacts/Data_ingestion/Feature_store/Anime_Ratings.csv.
+[ 2025-06-12 15:05:30,243 ] 38 root - INFO - Saving DataFrame to file: Artifacts/Data_ingestion/Feature_store/Anime_Users.csv
+[ 2025-06-12 15:05:32,513 ] 42 root - INFO - DataFrame saved successfully to Artifacts/Data_ingestion/Feature_store/Anime_Users.csv.
