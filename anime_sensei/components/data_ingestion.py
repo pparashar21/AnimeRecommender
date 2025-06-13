@@ -21,6 +21,7 @@ class DataIngestion:
         try:
             self.data_ingestion_config = data_ingestion_config
         except Exception as e:
+            logging.error(ExceptionHandler(e, sys))
             raise ExceptionHandler(e, sys)
 
     def ingest_data(self) -> DataIngestionArtifact:
@@ -49,6 +50,7 @@ class DataIngestion:
             return dataingestionartifact
 
         except Exception as e:
+            logging.error(ExceptionHandler(e, sys))
             raise ExceptionHandler(e, sys)
         
 if __name__ == "__main__":

@@ -27,3 +27,6 @@ DATA_INGESTION_DIR_NAME:str = "Data_ingestion"
 DATA_INGESTION_FEATURE_STORE_DIR: str = "Feature_store"
 DATA_INGESTION_INGESTED_DIR: str = "Ingested"
 
+"""
+Defining data transformation constants
+"""
