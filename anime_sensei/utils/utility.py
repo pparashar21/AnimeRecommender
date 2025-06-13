@@ -23,6 +23,7 @@ def get_data_from_kaggle(file_name:str) -> pd.DataFrame:
     KAGGLE_DATASET_SLUG,
     file_name,
     )
+    logging.info(f"Extracting {file_name} from Kaggle")
     logging.info(f"Shape of the dataframe: {df.shape}")
     logging.info(f"Column names: {df.columns}")
     logging.info(f"Preview of the DataFrame:\n{df.head()}")
