@@ -1,5 +1,4 @@
 import sys
-import pandas as pd
 from anime_sensei.loggers.logging import logging
 from anime_sensei.exception.handler import ExceptionHandler
 from anime_sensei.entity.config_entity import DataIngestionConfig

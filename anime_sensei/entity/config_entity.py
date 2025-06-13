@@ -12,9 +12,9 @@ class DataIngestionConfig:
     """
     def __init__(self):
         self.data_ingestion_dir: str = os.path.join(ARTIFACT_DIR, DATA_INGESTION_DIR_NAME)
-        self.feature_store_anime_file_path: str = os.path.join(self.data_ingestion_dir, DATA_INGESTION_FEATURE_STORE_DIR, ANIME_DATASET_FILE_NAME) 
-        self.feature_store_rating_file_path: str = os.path.join(self.data_ingestion_dir, DATA_INGESTION_FEATURE_STORE_DIR, RATING_DATASET_FILE_NAME)
-        self.feature_store_user_file_path: str = os.path.join(self.data_ingestion_dir, DATA_INGESTION_FEATURE_STORE_DIR, USER_DATASET_FILE_NAME)
+        self.feature_store_anime_file_path: str = os.path.join(self.data_ingestion_dir, ANIME_DATASET_FILE_NAME) 
+        self.feature_store_rating_file_path: str = os.path.join(self.data_ingestion_dir, RATING_DATASET_FILE_NAME)
+        self.feature_store_user_file_path: str = os.path.join(self.data_ingestion_dir, USER_DATASET_FILE_NAME)
         self.anime_filepath: str = ANIME_DATASET_LINK
         self.rating_filepath: str = RATING_DATASET_LINK
         self.user_filepath: str = USER_DATASET_LINK
