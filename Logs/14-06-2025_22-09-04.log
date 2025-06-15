@@ -1,0 +1,33 @@
+[ 2025-06-14 22:09:05,181 ] 24 root - INFO - Extracting anime-dataset-2023.csv from Kaggle
+[ 2025-06-14 22:09:05,566 ] 30 root - INFO - Shape of the dataframe: (24905, 24)
+[ 2025-06-14 22:09:05,566 ] 31 root - INFO - Column names: Index(['anime_id', 'Name', 'English name', 'Other name', 'Score', 'Genres',
+       'Synopsis', 'Type', 'Episodes', 'Aired', 'Premiered', 'Status',
+       'Producers', 'Licensors', 'Studios', 'Source', 'Duration', 'Rating',
+       'Rank', 'Popularity', 'Favorites', 'Scored By', 'Members', 'Image URL'],
+      dtype='object')
+[ 2025-06-14 22:09:05,573 ] 32 root - INFO - Preview of the DataFrame:
+   anime_id                             Name             English name  ... Scored By  Members                                          Image URL
+0         1                     Cowboy Bebop             Cowboy Bebop  ...  914193.0  1771505  https://cdn.myanimelist.net/images/anime/4/196...
+1         5  Cowboy Bebop: Tengoku no Tobira  Cowboy Bebop: The Movie  ...  206248.0   360978  https://cdn.myanimelist.net/images/anime/1439/...
+2         6                           Trigun                   Trigun  ...  356739.0   727252  https://cdn.myanimelist.net/images/anime/7/203...
+3         7               Witch Hunter Robin       Witch Hunter Robin  ...   42829.0   111931  https://cdn.myanimelist.net/images/anime/10/19...
+4         8                   Bouken Ou Beet   Beet the Vandel Buster  ...    6413.0    15001  https://cdn.myanimelist.net/images/anime/7/215...
+
+[5 rows x 24 columns]
+[ 2025-06-14 22:09:05,573 ] 33 root - INFO - Data fetched successfully from Kaggle.
+[ 2025-06-14 22:09:05,573 ] 24 root - INFO - Extracting users-score-2023.csv from Kaggle
+[ 2025-06-14 22:09:12,819 ] 30 root - INFO - Shape of the dataframe: (24325191, 5)
+[ 2025-06-14 22:09:12,820 ] 31 root - INFO - Column names: Index(['user_id', 'Username', 'anime_id', 'Anime Title', 'rating'], dtype='object')
+[ 2025-06-14 22:09:12,822 ] 32 root - INFO - Preview of the DataFrame:
+   user_id Username  anime_id             Anime Title  rating
+0        1    Xinil        21               One Piece       9
+1        1    Xinil        48             .hack//Sign       7
+2        1    Xinil       320                  A Kite       5
+3        1    Xinil        49        Aa! Megami-sama!       8
+4        1    Xinil       304  Aa! Megami-sama! Movie       8
+[ 2025-06-14 22:09:12,822 ] 33 root - INFO - Data fetched successfully from Kaggle.
+[ 2025-06-14 22:09:12,822 ] 65 root - INFO - Saving DataFrame to file: ('anime-recommender-system-prasoon', 'Artifacts/Data_ingestion/06-14-2025_22-09-04/Anime_Desctiption.csv')
+[ 2025-06-14 22:09:12,828 ] 1352 botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+[ 2025-06-14 22:09:14,049 ] 71 root - INFO - DataFrame saved successfully to S3 at: anime-recommender-system-prasoon/Artifacts/Data_ingestion/06-14-2025_22-09-04/Anime_Desctiption.csv
+[ 2025-06-14 22:09:14,050 ] 65 root - INFO - Saving DataFrame to file: ('anime-recommender-system-prasoon', 'Artifacts/Data_ingestion/06-14-2025_22-09-04/Anime_Ratings.csv')
+[ 2025-06-14 22:10:26,748 ] 71 root - INFO - DataFrame saved successfully to S3 at: anime-recommender-system-prasoon/Artifacts/Data_ingestion/06-14-2025_22-09-04/Anime_Ratings.csv
