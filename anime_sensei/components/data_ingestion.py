@@ -3,7 +3,7 @@ from anime_sensei.loggers.logging import logging
 from anime_sensei.exception.handler import ExceptionHandler
 from anime_sensei.entity.config_entity import DataIngestionConfig
 from anime_sensei.entity.artifact_entity import DataIngestionArtifact
-from anime_sensei.utils.utility import export_dataframe_to_csv, get_data_from_kaggle
+from anime_sensei.utils.utility import export_dataframe_to_csv, get_data_from_kaggle, save_data_to_S3
 
 class DataIngestion:
     """
@@ -34,18 +34,15 @@ class DataIngestion:
             # Load anime and rating data from Hugging Face datasets
             anime_df = get_data_from_kaggle(self.data_ingestion_config.anime_filepath)
             rating_df = get_data_from_kaggle(self.data_ingestion_config.rating_filepath)
-            user_df = get_data_from_kaggle(self.data_ingestion_config.user_filepath)
 
             # Export data to DataFrame
-            export_dataframe_to_csv(anime_df, file_path=self.data_ingestion_config.feature_store_anime_file_path)
-            export_dataframe_to_csv(rating_df, file_path=self.data_ingestion_config.feature_store_rating_file_path)
-            export_dataframe_to_csv(user_df, file_path=self.data_ingestion_config.feature_store_user_file_path)
+            save_data_to_S3(anime_df, key=self.data_ingestion_config.feature_store_anime_file_path)
+            save_data_to_S3(rating_df, key=self.data_ingestion_config.feature_store_rating_file_path)
 
             # Create artifact to store data ingestion info
             dataingestionartifact = DataIngestionArtifact(
                 feature_store_anime_file_path=self.data_ingestion_config.feature_store_anime_file_path,
                 feature_store_rating_file_path=self.data_ingestion_config.feature_store_rating_file_path,
-                feature_store_user_file_path=self.data_ingestion_config.feature_store_user_file_path
             ) 
             return dataingestionartifact
 
@@ -61,4 +58,3 @@ if __name__ == "__main__":
 
     print(sol.feature_store_anime_file_path)
     print(sol.feature_store_rating_file_path)
-    print(sol.feature_store_user_file_path)

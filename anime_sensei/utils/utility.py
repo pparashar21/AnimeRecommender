@@ -1,6 +1,8 @@
 import os
 import sys 
+import boto3
 import pandas as pd
+import io
 import re
 from anime_sensei.loggers.logging import logging
 from anime_sensei.exception.handler import ExceptionHandler
@@ -35,9 +37,55 @@ def get_data_from_kaggle(file_name:str) -> pd.DataFrame:
         logging.error(ExceptionHandler(e,sys))
         raise ExceptionHandler(e, sys)
 
+def read_file_from_S3(key:str, bucket_name:str = "anime-recommender-system-prasoon")->pd.DataFrame:
+    """
+        Reads a pandas dataframe from the mentioned S3 location
+
+        Args:
+            key (str) : Key corresponding to the S3 location
+            bucket_name(str) : Bucket name of the S3 location
+        
+        Returns:
+            df (pd.DataFrame) : Returned pandas dataframe from S3 
+    """
+    try: 
+            logging.info(f"Reading data from : {bucket_name}/{key}")
+            s3 = boto3.client('s3')
+            response = s3.get_object(Bucket=bucket_name, Key=key)
+            df = pd.read_csv(io.BytesIO(response['Body'].read()))
+            logging.info(f"Data loaded successfully from S3!")
+            return df
+
+    except Exception as e:
+        logging.error(ExceptionHandler(e,sys))
+        raise ExceptionHandler(e,sys)
+
+def save_data_to_S3(dataframe: pd.DataFrame, key: str, bucket_name:str = "anime-recommender-system-prasoon") -> None:
+    """
+    Saves a given Pandas DataFrame to the mentioned S3 location
+    
+    Args:
+        dataframe (pd.DataFrame): The DataFrame to be saved.
+        file_path (str): The file path where the DataFrame should be stored.
+        bucket_name (str): Specify the name of the AWS bucket, a default bucket has been set
+    """
+    try:
+        logging.info(f"Saving DataFrame to file: {bucket_name, key}")
+        s3 = boto3.client('s3')
+        csv_buffer = io.BytesIO()
+        dataframe.to_csv(csv_buffer, index=False)
+        csv_buffer.seek(0)
+        s3.upload_fileobj(csv_buffer, bucket_name, key)
+        logging.info(f"DataFrame saved successfully to S3 at: {bucket_name}/{key}")
+        print(f"Upload Successfully to S3 at location : {bucket_name}/{key}")  
+
+    except Exception as e:
+        logging.error(ExceptionHandler(e,sys))
+        raise ExceptionHandler(e,sys) 
+
 def export_dataframe_to_csv(dataframe: pd.DataFrame, file_path: str) -> None:
     """
-    Saves a given Pandas DataFrame to a CSV file.
+    Saves a given Pandas DataFrame to a local CSV file.
     
     Args:
         dataframe (pd.DataFrame): The DataFrame to be saved.
