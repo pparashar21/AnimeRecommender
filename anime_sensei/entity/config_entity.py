@@ -22,4 +22,5 @@ class DataTransformationConfig:
     def __init__(self):
         self.data_transformation_dir:str = os.path.join(ARTIFACT_DIR, DATA_TRANSFORMATION_DIR_NAME, timestamp)
         self.merged_data:str = os.path.join(self.data_transformation_dir, MERGED_DATASET_FILE_NAME)
+        self.cleaned_anime_data:str = os.path.join(self.data_transformation_dir, CLEANED_ANIME_FILE_NAME)
 

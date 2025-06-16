@@ -29,3 +29,4 @@ DATA_INGESTION_INGESTED_DIR: str = "Ingested"
 Defining data transformation constants
 """
 DATA_TRANSFORMATION_DIR_NAME:str = "Data_transformed"
+CLEANED_ANIME_FILE_NAME:str = "Cleaned_Anime_Description.csv"

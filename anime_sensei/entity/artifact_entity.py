@@ -13,3 +13,4 @@ class DataIngestionArtifact:
 @dataclass
 class DataTransformationArtifact:
     merged_data:str
+    cleaned_anime_data:str

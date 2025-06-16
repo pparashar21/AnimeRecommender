@@ -100,12 +100,15 @@ class DataTransformation:
         try:
             anime_df = read_file_from_S3(self.data_ingestion_artifact.feature_store_anime_file_path)
             ratings_df = read_file_from_S3(self.data_ingestion_artifact.feature_store_rating_file_path)
+            
             anime_df = DataTransformation.clean_anime_data(anime_df)
-            merged_df = DataTransformation.merge_data(anime_df, ratings_df)
+            save_data_to_S3(anime_df, self.data_transform_config.cleaned_anime_data)
 
+            merged_df = DataTransformation.merge_data(anime_df, ratings_df)
             save_data_to_S3(merged_df, self.data_transform_config.merged_data)
             data_transformation_artifact = DataTransformationArtifact(
-                merged_data=self.data_transform_config.merged_data
+                merged_data=self.data_transform_config.merged_data,
+                cleaned_anime_data=self.data_transform_config.cleaned_anime_data
             )
 
             return data_transformation_artifact
@@ -124,4 +127,5 @@ if __name__ == "__main__":
     demo = DataTransformation(data_ingest, data_transform)
     artifacts = demo.initiate_transformation()
 
-    print(f"File saved at : {artifacts.merged_data}")
+    print(f"Cleaned anime file saved at : {artifacts.cleaned_anime_data}")
+    print(f"Merged file saved at : {artifacts.merged_data}")
