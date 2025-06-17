@@ -56,7 +56,12 @@ class ContentModelling:
             recs = lookup.iloc[idxs].copy()
             recs["similarity"] = 1 - dist  
 
-            print(f"\nOriginal Anime: {lookup.loc[i, 'Name']} \n Top-{top_k} Recommendations: \n {recs[['anime_id', 'Name', 'similarity']]}")
+            print(f"\nOriginal Anime: {lookup.loc[i, 'Name']}")
+            logging.info(f"\nOriginal Anime: {lookup.loc[i, 'Name']}")
+            print(f"\nTop-{top_k} Recommendations:")
+            logging.info(f"\nTop-{top_k} Recommendations:")
+            print(recs[["anime_id", "Name", "similarity"]])
+            logging.info(recs[["anime_id", "Name", "similarity"]])
 
             return recs
 
@@ -70,6 +75,6 @@ if __name__ == "__main__":
     temp_transformed_path = "Artifacts/Data_Transformed/06-16-2025_22-18-15/Transformed_Content_modelling.csv"
     dta = DataTransformationArtifact(transformed_content_data=temp_transformed_path)
     cmc = ContentModellingConfig()
-    demo = ContentModelling(dta, cmc, retrain=True)
+    demo = ContentModelling(dta, cmc, retrain=False)
     demo.model_trainer()
-    logging.info(demo.model_inference(anime_id=21, top_k=10))
+    demo.model_inference(anime_id=21, top_k=10)

@@ -1,0 +1,20 @@
+[ 2025-06-16 22:36:00,795 ] 18 root - INFO - Retrain is set to False. Skipping KNN training.
+[ 2025-06-16 22:36:00,795 ] 37 root - INFO - Loading content_knn artifact from S3.
+[ 2025-06-16 22:36:00,795 ] 141 root - INFO - Loading model from S3: anime-recommender-system-prasoon/Artifacts/Models/Content_Models/KNN_Content_model.joblib
+[ 2025-06-16 22:36:00,805 ] 1352 botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+[ 2025-06-16 22:36:04,412 ] 145 root - INFO - Model loaded successfully from S3.
+[ 2025-06-16 22:36:04,464 ] 60 root - INFO - 
+Original Anime: One Piece
+[ 2025-06-16 22:36:04,464 ] 62 root - INFO - 
+Top-10 Recommendations:
+[ 2025-06-16 22:36:04,466 ] 64 root - INFO -       anime_id                                               Name  similarity
+6360     11061                             Hunter x Hunter (2011)    0.910646
+1574      1735                                 Naruto: Shippuuden    0.877571
+4651      6702                                         Fairy Tail    0.868360
+10          20                                             Naruto    0.859972
+8380     22043                                  Fairy Tail (2014)    0.851561
+245        269                                             Bleach    0.850722
+8770     23755                                  Nanatsu no Taizai    0.849351
+7013     14513                       Magi: The Labyrinth of Magic    0.849315
+9447     28121  Dungeon ni Deai wo Motomeru no wa Machigatteir...    0.843520
+7477     17265                                        Log Horizon    0.842805
