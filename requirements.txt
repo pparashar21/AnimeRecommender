@@ -5,5 +5,5 @@ pandas==1.5.3
 numpy==1.26.2
 joblib==1.5.1
 boto3==1.38.36
+sentence_transforners==4.1.0
 ipykernel
--e .

@@ -1,0 +1,11 @@
+[ 2025-06-16 22:18:15,075 ] 53 root - INFO - Reading data from : anime-recommender-system-prasoon/Artifacts/Data_Cleaning/06-16-2025_20-05-59/Cleaned_Anime_Description.csv
+[ 2025-06-16 22:18:15,085 ] 1352 botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+[ 2025-06-16 22:18:15,884 ] 57 root - INFO - Data loaded successfully from S3!
+[ 2025-06-16 22:18:15,938 ] 211 sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+[ 2025-06-16 22:18:15,938 ] 219 sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+[ 2025-06-16 22:19:03,987 ] 94 root - INFO - Feature Engineering - Content Model : Text features extracted
+[ 2025-06-16 22:19:04,114 ] 96 root - INFO - Feature Engineering - Content Model : Genre features extracted
+[ 2025-06-16 22:19:04,119 ] 98 root - INFO - Feature Engineering - Content Model : Categotical features extracted
+[ 2025-06-16 22:19:04,121 ] 100 root - INFO - Feature Engineering - Content Model : Numerical features extracted
+[ 2025-06-16 22:19:04,141 ] 74 root - INFO - Saving DataFrame to file: ('anime-recommender-system-prasoon', 'Artifacts/Data_Transformed/06-16-2025_22-18-15/Transformed_Content_modelling.csv')
+[ 2025-06-16 22:19:21,694 ] 80 root - INFO - DataFrame saved successfully to S3 at: anime-recommender-system-prasoon/Artifacts/Data_Transformed/06-16-2025_22-18-15/Transformed_Content_modelling.csv

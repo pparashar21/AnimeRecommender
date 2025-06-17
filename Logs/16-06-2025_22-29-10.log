@@ -1,0 +1,23 @@
+[ 2025-06-16 22:29:11,644 ] 23 root - INFO - Reading transformed data from S3.
+[ 2025-06-16 22:29:11,644 ] 53 root - INFO - Reading data from : anime-recommender-system-prasoon/Artifacts/Data_Transformed/06-16-2025_22-18-15/Transformed_Content_modelling.csv
+[ 2025-06-16 22:29:11,654 ] 1352 botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+[ 2025-06-16 22:29:20,908 ] 57 root - INFO - Data loaded successfully from S3!
+[ 2025-06-16 22:29:20,919 ] 29 root - INFO - Preparing lookup table.
+[ 2025-06-16 22:29:20,920 ] 34 root - INFO - Training NearestNeighbors model.
+[ 2025-06-16 22:29:20,936 ] 46 root - INFO - Uploading combined model artifact to S3.
+[ 2025-06-16 22:29:20,936 ] 116 root - INFO - Saving model to S3: anime-recommender-system-prasoon/Artifacts/Models/Content_Models/KNN_Content_model.joblib
+[ 2025-06-16 22:29:36,741 ] 122 root - INFO - Model successfully saved to S3 at: anime-recommender-system-prasoon/Artifacts/Models/Content_Models/KNN_Content_model.joblib
+[ 2025-06-16 22:29:36,757 ] 37 root - INFO - Loading content_knn artifact from S3.
+[ 2025-06-16 22:29:36,757 ] 141 root - INFO - Loading model from S3: anime-recommender-system-prasoon/Artifacts/Models/Content_Models/KNN_Content_model.joblib
+[ 2025-06-16 22:29:40,753 ] 145 root - INFO - Model loaded successfully from S3.
+[ 2025-06-16 22:29:40,781 ] 75 root - INFO -       anime_id                                               Name  similarity
+6360     11061                             Hunter x Hunter (2011)    0.910646
+1574      1735                                 Naruto: Shippuuden    0.877571
+4651      6702                                         Fairy Tail    0.868360
+10          20                                             Naruto    0.859972
+8380     22043                                  Fairy Tail (2014)    0.851561
+245        269                                             Bleach    0.850722
+8770     23755                                  Nanatsu no Taizai    0.849351
+7013     14513                       Magi: The Labyrinth of Magic    0.849315
+9447     28121  Dungeon ni Deai wo Motomeru no wa Machigatteir...    0.843520
+7477     17265                                        Log Horizon    0.842805
