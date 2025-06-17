@@ -4,6 +4,7 @@ import boto3
 import pandas as pd
 import io
 import re
+import joblib
 from anime_sensei.loggers.logging import logging
 from anime_sensei.exception.handler import ExceptionHandler
 from anime_sensei.constant import * 
@@ -101,7 +102,52 @@ def export_dataframe_to_csv(dataframe: pd.DataFrame, file_path: str) -> None:
     except Exception as e:
         logging.error(ExceptionHandler(e, sys))
         raise ExceptionHandler(e, sys)
+
+def save_model_to_S3(model, key: str, bucket_name: str = "anime-recommender-system-prasoon") -> None:
+    """
+    Saves a serialized model object (e.g., joblib or pickle) to S3.
+
+    Args:
+        model: The trained model object to save.
+        key (str): S3 key where the model will be saved.
+        bucket_name (str): Name of the S3 bucket.
+    """
+    try:
+        logging.info(f"Saving model to S3: {bucket_name}/{key}")
+        s3 = boto3.client("s3")
+        buffer = io.BytesIO()
+        joblib.dump(model, buffer)
+        buffer.seek(0)
+        s3.upload_fileobj(buffer, bucket_name, key)
+        logging.info(f"Model successfully saved to S3 at: {bucket_name}/{key}")
+        print(f"Model upload complete to S3 at: {bucket_name}/{key}")
+
+    except Exception as e:
+        logging.error(ExceptionHandler(e, sys))
+        raise ExceptionHandler(e, sys)
     
+def load_model_from_S3(key: str, bucket_name: str = "anime-recommender-system-prasoon"):
+    """
+    Load a serialized model object (e.g., joblib or pickle) from S3.
+
+    Args:
+        key (str): Key corresponding to the model file in S3.
+        bucket_name (str): Name of the S3 bucket.
+
+    Returns:
+        model: The deserialized model object.
+    """
+    try:
+        logging.info(f"Loading model from S3: {bucket_name}/{key}")
+        s3 = boto3.client("s3")
+        response = s3.get_object(Bucket=bucket_name, Key=key)
+        model = joblib.load(io.BytesIO(response["Body"].read()))
+        logging.info("Model loaded successfully from S3.")
+        return model
+
+    except Exception as e:
+        logging.error(ExceptionHandler(e, sys))
+        raise ExceptionHandler(e, sys)
 
 def parse_duration_to_minutes(duration):
     """

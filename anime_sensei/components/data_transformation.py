@@ -1,131 +1,134 @@
 import sys 
 import numpy as np
 import pandas as pd 
+import re
+from sentence_transformers import SentenceTransformer
+from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 from anime_sensei.loggers.logging import logging
 from anime_sensei.exception.handler import ExceptionHandler
-from anime_sensei.utils.utility import export_dataframe_to_csv, parse_duration_to_minutes, read_file_from_S3, save_data_to_S3
+from anime_sensei.utils.utility import read_file_from_S3, save_data_to_S3
 from anime_sensei.constant import *
 from anime_sensei.entity.config_entity import DataTransformationConfig
-from anime_sensei.entity.artifact_entity import DataIngestionArtifact, DataTransformationArtifact
+from anime_sensei.entity.artifact_entity import DataCleaningArtifact, DataTransformationArtifact
 
 class DataTransformation:
     """
     Class for performing data transformation and its various intermediate steps
     """
-    def __init__(self, data_ingestion_artifact: DataIngestionArtifact, data_transform_config: DataTransformationConfig):
+    def __init__(self, data_cleaning_artifact: DataCleaningArtifact, data_transform_config: DataTransformationConfig):
         try:
-            self.data_ingestion_artifact = data_ingestion_artifact
+            self.data_cleaning_artifact = data_cleaning_artifact
             self.data_transform_config = data_transform_config
+            self.genre_categories = []
         except Exception as e:
-            logging.error(ExceptionHandler(e))
-            raise ExceptionHandler(e)
+            logging.error(ExceptionHandler(e,sys))
+            raise ExceptionHandler(e,sys)
 
     @staticmethod
-    def clean_anime_data(anime:pd.DataFrame) -> pd.DataFrame:
-        """
-        Function to perform data cleaning and mild feature engineering for the anime dataset
-
-        Args:
-            anime (pd.DataFrame) : The original anime dataset
-        
-        Returns:
-            anime (pd.DataFrame) : Cleaned and transformed anime dataset
-        """
+    def transform_text_col(self, df: pd.DataFrame) -> np.ndarray:
         try:
-            logging.info(f"Cleaning ANIME dataset, initial shape of dataset: {anime.shape}")
-
-            anime.replace("UNKNOWN", np.nan, inplace = True)
-            anime['Synopsis'].replace("No description available for this anime.", np.nan, inplace = True)
-            anime['Scored By'].replace(np.nan, 0, inplace = True)
-
-            anime.drop(['English name', 'Other name', 'Premiered', 'Producers', 'Licensors', 'Studios', 'Source', 'Aired', 'Status', 'Rank'], axis = 1, inplace=True)
-            anime.dropna(subset=['Synopsis'], inplace=True)
-
-            average_rating = anime['Score'][anime['Score']!=np.nan]
-            average_rating = average_rating.astype('float')
-            mean = round(average_rating.mean(), 2)
-            anime['Score'].replace(np.nan, mean, inplace = True)
-            anime['Score'] = anime['Score'].astype('float64')
-
-            anime['Episodes'].replace(np.nan, 0.0, inplace = True)
-            anime['Episodes'] = anime['Episodes'].astype('float64')
-
-            anime['Type'].replace(np.nan, "UNKNOWN", inplace = True)
-            anime['Genres'].replace(np.nan, "UNKNOWN", inplace = True)
-
-            mode_ratings = anime['Rating'].value_counts().idxmax()
-            anime['Rating'].replace(np.nan, mode_ratings, inplace = True)
-
-            anime['Duration_mins'] = anime['Duration'].apply(parse_duration_to_minutes)
-            anime.drop('Duration', axis = 1, inplace = True)
-
-            logging.info(f"Cleaning done! Shape of resultant dataset: {anime.shape}")
-            return anime
-        
+            cleaned_text = df[self.data_transform_config.text_col].fillna("").str.replace(
+                re.compile(r"<.*?>|\\n"), " ", regex=True
+            )
+            model = SentenceTransformer(self.data_transform_config.sbert_model_name)
+            return model.encode(
+                cleaned_text.tolist(),
+                batch_size=self.data_transform_config.sbert_batch_size,
+                show_progress_bar=self.data_transform_config.sbert_show_progress,
+                normalize_embeddings=True
+            )
         except Exception as e:
-            logging.error(ExceptionHandler(e, sys))
-            raise ExceptionHandler(e, sys)
-        
+            logging.error(ExceptionHandler(e,sys))
+            raise ExceptionHandler(e,sys)
+
     @staticmethod
-    def merge_data(anime:pd.DataFrame, ratings:pd.DataFrame)->pd.DataFrame:
-        """
-        Function to merge the anime and the ratings dataframe to get a full view to train for the recommender system
-
-        Args:
-            anime (pd.DataFrame) : Cleaned and transformed anime dataset
-            ratings (pd.DataFrame) : Cleaned and transformed ratings dataset
-        
-        Returns:
-            merged (pd.DataFrame) : Merged dataframe 
-        """
+    def transform_genre_col(self, df: pd.DataFrame) -> np.ndarray:
         try:
-            logging.info(f"Started merging the datasets.\nShape of ANIME dataset: {anime.shape} \nShape of RATINGS dataset: {ratings.shape}")
-            merged = pd.merge(anime, ratings, on='anime_id', how='inner', indicator=True)
-            merged.drop(['Anime Title'], axis=1, inplace = True)
-            logging.info(f"Merged successful! Shape of resultant dataframe: {merged.shape}")
-            logging.info(f"Columns of the resultant datafram: {merged.columns}")
-            return merged
-
+            genres = (
+                df[self.data_transform_config.genre_col]
+                .fillna("")
+                .str.split(self.data_transform_config.genre_sep)
+                .apply(lambda lst: {g.strip() for g in lst})
+            )
+            genre_set = (
+                df[self.data_transform_config.genre_col]
+                .fillna("")
+                .str.split(self.data_transform_config.genre_sep)
+                .explode()
+                .str.strip()
+                .loc[lambda s: s != ""]
+            )
+            self.genre_categories = sorted(genre_set.unique())
+            genre_matrix = np.zeros((len(df), len(self.genre_categories)), dtype=np.float32)
+            for row, genre_vals in enumerate(genres):
+                for col, genre in enumerate(self.genre_categories):
+                    if genre in genre_vals:
+                        genre_matrix[row, col] = 1.0
+            return genre_matrix
         except Exception as e:
-            logging.error(ExceptionHandler(e, sys))
-            raise ExceptionHandler(e, sys)
-        
-    def initiate_transformation(self)->DataTransformationArtifact:
-        """
-        Runner function for the data transformation module
-        
-        Returns:
-            DataTransformationArtifact : The artifact containing paths to the transformed dataset
-        """
-        try:
-            anime_df = read_file_from_S3(self.data_ingestion_artifact.feature_store_anime_file_path)
-            ratings_df = read_file_from_S3(self.data_ingestion_artifact.feature_store_rating_file_path)
-            
-            anime_df = DataTransformation.clean_anime_data(anime_df)
-            save_data_to_S3(anime_df, self.data_transform_config.cleaned_anime_data)
+            logging.error(ExceptionHandler(e,sys))
+            raise ExceptionHandler(e,sys)
 
-            merged_df = DataTransformation.merge_data(anime_df, ratings_df)
-            save_data_to_S3(merged_df, self.data_transform_config.merged_data)
-            data_transformation_artifact = DataTransformationArtifact(
-                merged_data=self.data_transform_config.merged_data,
-                cleaned_anime_data=self.data_transform_config.cleaned_anime_data
+    @staticmethod
+    def transform_cat_cols(self, df: pd.DataFrame) -> np.ndarray:
+        try:
+            encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+            return encoder.fit_transform(df[self.data_transform_config.cat_cols])
+        except Exception as e:
+            logging.error(ExceptionHandler(e,sys))
+            raise ExceptionHandler(e,sys)
+
+    @staticmethod
+    def transform_num_cols(self, df: pd.DataFrame) -> np.ndarray:
+        try:
+            scaler = MinMaxScaler()
+            return scaler.fit_transform(df[self.data_transform_config.num_cols])
+        except Exception as e:
+            logging.error(ExceptionHandler(e,sys))
+            raise ExceptionHandler(e,sys)
+
+    def data_transformation_content_modelling(self):
+        try:
+            df = read_file_from_S3(self.data_cleaning_artifact.cleaned_anime_data)
+            text_features = self.transform_text_col(self, df)
+            logging.info("Feature Engineering - Content Model : Text features extracted")
+            genre_features = self.transform_genre_col(self, df)
+            logging.info("Feature Engineering - Content Model : Genre features extracted")
+            cat_features = self.transform_cat_cols(self, df)
+            logging.info("Feature Engineering - Content Model : Categotical features extracted")
+            num_features = self.transform_num_cols(self, df)
+            logging.info("Feature Engineering - Content Model : Numerical features extracted")
+
+            all_features = np.hstack([text_features, genre_features, cat_features, num_features])
+            feature_columns = (
+                [f"sbert_{i}" for i in range(text_features.shape[1])] +
+                [f"genre_{g}" for g in self.genre_categories] +
+                list(pd.get_dummies(df[self.data_transform_config.cat_cols]).columns) +
+                self.data_transform_config.num_cols
             )
 
-            return data_transformation_artifact
+            feat_df = pd.DataFrame(all_features, columns=feature_columns, index=df.index)
+            # Prepend anime_id and Name columns from original df
+            feat_df.insert(0, "Name", df["Name"].values)
+            feat_df.insert(0, "anime_id", df["anime_id"].values)
+            output_path = self.data_transform_config.transformed_content_data
+            save_data_to_S3(feat_df, output_path)
+            
+            return DataTransformationArtifact(transformed_content_data=output_path)
         except Exception as e:
-            logging.error(ExceptionHandler(e, sys))
-            raise ExceptionHandler(e, sys)
+            logging.error(ExceptionHandler(e,sys))
+            raise ExceptionHandler(e,sys)
         
 
 if __name__ == "__main__":
-    # In the pipeline, these temp_paths would be accessed from DataIngestionArtifacts class that would have been created
-    # at the data ingestion module, adding these here to test out functionality
-    temp_anime_path = 'Artifacts/Data_ingestion/06-14-2025_22-09-04/Anime_Desctiption.csv'
-    temp_rating_path = 'Artifacts/Data_ingestion/06-14-2025_22-09-04/Anime_Ratings.csv'
-    data_ingest = DataIngestionArtifact(temp_anime_path, temp_rating_path)
-    data_transform = DataTransformationConfig()
-    demo = DataTransformation(data_ingest, data_transform)
-    artifacts = demo.initiate_transformation()
+    # In the pipeline, these temp_paths would be accessed from DataCleaningArtifact class that would have been created
+    # at the data cleaning module, adding these here to test out functionality
+    temp_cleaning_artifacts = "Artifacts/Data_Cleaning/06-16-2025_20-05-59/Cleaned_Anime_Description.csv"
+    temp_merged_artifacts = 'Artifacts/Data_Cleaning/06-16-2025_20-05-59/Anime_Full_House.csv'
+    dca = DataCleaningArtifact(merged_data=temp_merged_artifacts, cleaned_anime_data=temp_cleaning_artifacts)
+    dtc = DataTransformationConfig()
+    demo = DataTransformation(dca, dtc)
+    print("Starting data transformation")
+    dta = demo.data_transformation_content_modelling()
 
-    print(f"Cleaned anime file saved at : {artifacts.cleaned_anime_data}")
-    print(f"Merged file saved at : {artifacts.merged_data}")
+    print(f"Transformation done and data saved at Key : {dta.transformed_content_data}")

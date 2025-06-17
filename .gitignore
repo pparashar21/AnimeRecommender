@@ -10,3 +10,8 @@ FindMyNextAnime.egg-info
 
 Artifacts
 Artifacts/*
+
+notebooks/Logs
+notebooks/Logs/*
+notebooks/models
+notebooks/models/*

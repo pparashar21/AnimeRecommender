@@ -15,12 +15,38 @@ class DataIngestionConfig:
         self.anime_filepath: str = ANIME_DATASET_LINK
         self.rating_filepath: str = RATING_DATASET_LINK
 
+class DataCleaningConfig:
+    """
+     Configuration of the Data cleaning module to store cleaned data after mild preprocessing
+    """
+    def __init__(self):
+        self.data_cleaned_dir:str = os.path.join(ARTIFACT_DIR, DATA_CLEANING_DIR_NAME, timestamp)
+        self.merged_data:str = os.path.join(self.data_cleaned_dir, MERGED_DATASET_FILE_NAME)
+        self.cleaned_anime_data:str = os.path.join(self.data_cleaned_dir, CLEANED_ANIME_FILE_NAME)
+
 class DataTransformationConfig:
     """
-    Configuration of the Data transformation module to store transformed data and preprocessing objects
+    Configuration of the Data transformation module to store transformed data and transformation defaults
     """
     def __init__(self):
         self.data_transformation_dir:str = os.path.join(ARTIFACT_DIR, DATA_TRANSFORMATION_DIR_NAME, timestamp)
-        self.merged_data:str = os.path.join(self.data_transformation_dir, MERGED_DATASET_FILE_NAME)
-        self.cleaned_anime_data:str = os.path.join(self.data_transformation_dir, CLEANED_ANIME_FILE_NAME)
+        self.transformed_content_data:str = os.path.join(self.data_transformation_dir, TRANSFORMED_CONTENT_MODELLING_FILE_NAME)
 
+        # Default parameters for transfomation for content based modelling
+        self.text_col:str = "Synopsis"
+        self.genre_col:str = "Genres"
+        self.genre_sep:str = ","
+        self.cat_cols:list[str] = ["Type", "Rating"]
+        self.num_cols:list[str] = ["Score", "Episodes", "Popularity", "Favorites", "Members", "Duration_mins"]
+        self.sbert_model_name: str = "all-MiniLM-L6-v2"
+        self.sbert_batch_size: int = 64
+        self.sbert_show_progress: bool = False
+
+class ContentModellingConfig:
+    """
+    Configuration of the Data transformation module to store transformed data and transformation defaults
+    """
+    def __init__(self):
+        self.content_model_dir:str = os.path.join(ARTIFACT_DIR, MODELS_DIR_NAME, CONTENT_MODELS_DIR_NAME)
+        self.knn_model_path:str = os.path.join(self.content_model_dir, CONTENT_MODELS_NAME)
+        self.knn_lookup_path:str = os.path.join(self.content_model_dir, CONTENT_MODELS_LOOKUP_NAME)

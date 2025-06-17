@@ -11,6 +11,14 @@ class DataIngestionArtifact:
     feature_store_rating_file_path:str
 
 @dataclass
-class DataTransformationArtifact:
+class DataCleaningArtifact:
     merged_data:str
     cleaned_anime_data:str
+    
+@dataclass
+class DataTransformationArtifact:
+    transformed_content_data:str
+
+@dataclass
+class ContentModellingArtifact:
+    knn_model_name:str
