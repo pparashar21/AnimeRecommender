@@ -44,9 +44,18 @@ class DataTransformationConfig:
 
 class ContentModellingConfig:
     """
-    Configuration of the Data transformation module to store transformed data and transformation defaults
+    Configuration of the Content based modelling module to store KNN models and lookup paths stored after model training
     """
     def __init__(self):
         self.content_model_dir:str = os.path.join(ARTIFACT_DIR, MODELS_DIR_NAME, CONTENT_MODELS_DIR_NAME)
         self.knn_model_path:str = os.path.join(self.content_model_dir, CONTENT_MODELS_NAME)
         self.knn_lookup_path:str = os.path.join(self.content_model_dir, CONTENT_MODELS_LOOKUP_NAME)
+
+class CollaborativeModellingConfig:
+    """
+    Configuration of the Collaborative modelling module to store _________
+    """
+    def __init__(self):
+        self.collaborate_model_dir:str = os.path.join(ARTIFACT_DIR, MODELS_DIR_NAME, COLLABORATE_MODELS_DIR_NAME)
+        # self.knn_model_path:str = os.path.join(self.content_model_dir, CONTENT_MODELS_NAME)
+        # self.knn_lookup_path:str = os.path.join(self.content_model_dir, CONTENT_MODELS_LOOKUP_NAME)

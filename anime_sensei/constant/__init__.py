@@ -44,3 +44,10 @@ MODELS_DIR_NAME = "Models"
 CONTENT_MODELS_DIR_NAME:str = "Content_Models"
 CONTENT_MODELS_NAME:str = "KNN_Content_model.joblib"
 CONTENT_MODELS_LOOKUP_NAME:str = "KNN_Content_lookup.joblib"
+
+"""
+Defining collaborative model constraints
+"""
+COLLABORATE_MODELS_DIR_NAME:str = "Collaborative_Models"
+# CONTENT_MODELS_NAME:str = "KNN_Content_model.joblib"
+# CONTENT_MODELS_LOOKUP_NAME:str = "KNN_Content_lookup.joblib"
