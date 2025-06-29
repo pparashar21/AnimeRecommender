@@ -1,3 +1,4 @@
+matplotlib==3.10.3
 kaggle==1.7.4.5
 kagglehub==0.3.12
 python_dotenv==1.1.0
@@ -6,4 +7,7 @@ numpy==1.26.2
 joblib==1.5.1
 boto3==1.38.36
 sentence_transforners==4.1.0
+tensorflow==2.19.0
+tensorflow_macos==2.16.2 # My production environment was MacOS (M1/M2)
+surprise==0.1
 ipykernel

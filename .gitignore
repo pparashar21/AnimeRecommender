@@ -15,3 +15,7 @@ notebooks/Logs
 notebooks/Logs/*
 notebooks/models
 notebooks/models/*
+notebooks/Weights
+notebooks/Weights/*
+notebooks/encoders
+notebooks/encoders/*
