@@ -44,3 +44,12 @@ MODELS_DIR_NAME = "Models"
 CONTENT_MODELS_DIR_NAME:str = "Content_Models"
 CONTENT_MODELS_NAME:str = "KNN_Content_model.joblib"
 CONTENT_MODELS_LOOKUP_NAME:str = "KNN_Content_lookup.joblib"
+
+"""
+Defining collaborative model constraints
+"""
+COLLABORATE_MODELS_DIR_NAME:str = "Collaborative_Models"
+COLLABORATE_NEURAL_NETS:str = "Neural_nets_Collaborative_models.weights.h5"
+COLLABORATE_NN_USER_ENCODING:str = "encoders/user_ratings_encoder.pkl"
+COLLABORATE_NN_ANIME_ENCODING:str = "encoders/anime_encoder.pkl"
+COLLABORATE_SVD:str = "SVD_Collaborative_models"

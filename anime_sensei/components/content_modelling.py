@@ -1,12 +1,11 @@
 import sys 
-import joblib
 from anime_sensei.loggers.logging import logging
 from anime_sensei.exception.handler import ExceptionHandler
-from anime_sensei.utils.utility import read_file_from_S3, load_model_from_S3
+from anime_sensei.utils.utility import load_model_from_S3
 from anime_sensei.constant import *
 from anime_sensei.model_trainer.content_modelling_trainer import ContentModellingTrainer
 from anime_sensei.entity.config_entity import ContentModellingConfig
-from anime_sensei.entity.artifact_entity import DataTransformationArtifact, ContentModellingArtifact
+from anime_sensei.entity.artifact_entity import DataTransformationArtifact
 
 class ContentModelling:
     def __init__(self, dta: DataTransformationArtifact, cmc: ContentModellingConfig, retrain: bool):

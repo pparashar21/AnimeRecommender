@@ -12,7 +12,7 @@ class DataIngestionArtifact:
 
 @dataclass
 class DataCleaningArtifact:
-    merged_data:str
+    # merged_data:str
     cleaned_anime_data:str
     
 @dataclass
@@ -22,3 +22,10 @@ class DataTransformationArtifact:
 @dataclass
 class ContentModellingArtifact:
     knn_model_name:str
+
+@dataclass
+class CollaborativeModellingArtifact:
+    neural_nets_model_name:str
+    svd_model_name:str
+    neural_nets_user_encoder:str
+    neural_nets_anime_encoder:str
