@@ -66,29 +66,29 @@ class DataCleaning:
             logging.error(ExceptionHandler(e, sys))
             raise ExceptionHandler(e, sys)
         
-    @staticmethod
-    def merge_data(anime:pd.DataFrame, ratings:pd.DataFrame)->pd.DataFrame:
-        """
-        Function to merge the anime and the ratings dataframe to get a full view to train for the recommender system
+    # @staticmethod
+    # def merge_data(anime:pd.DataFrame, ratings:pd.DataFrame)->pd.DataFrame:
+    #     """
+    #     Function to merge the anime and the ratings dataframe to get a full view to train for the recommender system
 
-        Args:
-            anime (pd.DataFrame) : Cleaned and transformed anime dataset
-            ratings (pd.DataFrame) : Cleaned and transformed ratings dataset
+    #     Args:
+    #         anime (pd.DataFrame) : Cleaned and transformed anime dataset
+    #         ratings (pd.DataFrame) : Cleaned and transformed ratings dataset
         
-        Returns:
-            merged (pd.DataFrame) : Merged dataframe 
-        """
-        try:
-            logging.info(f"Started merging the datasets.\nShape of ANIME dataset: {anime.shape} \nShape of RATINGS dataset: {ratings.shape}")
-            merged = pd.merge(anime, ratings, on='anime_id', how='inner', indicator=True)
-            merged.drop(['Anime Title'], axis=1, inplace = True)
-            logging.info(f"Merged successful! Shape of resultant dataframe: {merged.shape}")
-            logging.info(f"Columns of the resultant datafram: {merged.columns}")
-            return merged
+    #     Returns:
+    #         merged (pd.DataFrame) : Merged dataframe 
+    #     """
+    #     try:
+    #         logging.info(f"Started merging the datasets.\nShape of ANIME dataset: {anime.shape} \nShape of RATINGS dataset: {ratings.shape}")
+    #         merged = pd.merge(anime, ratings, on='anime_id', how='inner', indicator=True)
+    #         merged.drop(['Anime Title'], axis=1, inplace = True)
+    #         logging.info(f"Merged successful! Shape of resultant dataframe: {merged.shape}")
+    #         logging.info(f"Columns of the resultant datafram: {merged.columns}")
+    #         return merged
 
-        except Exception as e:
-            logging.error(ExceptionHandler(e, sys))
-            raise ExceptionHandler(e, sys)
+    #     except Exception as e:
+    #         logging.error(ExceptionHandler(e, sys))
+    #         raise ExceptionHandler(e, sys)
         
     def initiate_transformation(self)->DataCleaningArtifact:
         """
@@ -99,15 +99,15 @@ class DataCleaning:
         """
         try:
             anime_df = read_file_from_S3(self.data_ingestion_artifact.feature_store_anime_file_path)
-            ratings_df = read_file_from_S3(self.data_ingestion_artifact.feature_store_rating_file_path)
+            # ratings_df = read_file_from_S3(self.data_ingestion_artifact.feature_store_rating_file_path)
             
             anime_df = DataCleaning.clean_anime_data(anime_df)
             save_data_to_S3(anime_df, self.data_transform_config.cleaned_anime_data)
 
-            merged_df = DataCleaning.merge_data(anime_df, ratings_df)
-            save_data_to_S3(merged_df, self.data_transform_config.merged_data)
+            # merged_df = DataCleaning.merge_data(anime_df, ratings_df)
+            # save_data_to_S3(merged_df, self.data_transform_config.merged_data) too big for upload, can do it locally when needed
             data_transformation_artifact = DataCleaningArtifact(
-                merged_data=self.data_transform_config.merged_data,
+                # merged_data=self.data_transform_config.merged_data,
                 cleaned_anime_data=self.data_transform_config.cleaned_anime_data
             )
 
@@ -128,4 +128,4 @@ if __name__ == "__main__":
     artifacts = demo.initiate_transformation()
 
     print(f"Cleaned anime file saved at : {artifacts.cleaned_anime_data}")
-    print(f"Merged file saved at : {artifacts.merged_data}")
+    # print(f"Merged file saved at : {artifacts.merged_data}")

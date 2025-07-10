@@ -5,6 +5,7 @@ import pandas as pd
 import io
 import re
 import joblib
+import pickle
 from anime_sensei.loggers.logging import logging
 from anime_sensei.exception.handler import ExceptionHandler
 from anime_sensei.constant import * 
@@ -175,3 +176,110 @@ def parse_duration_to_minutes(duration):
 
     minutes_per_show = hours * 60 + minutes
     return minutes_per_show
+
+def download_file_from_s3(s3_file_path: str, local_file_path: str, bucket_name: str = "anime-recommender-system-prasoon"):
+    """
+    Download a file from S3 to a local path.
+    """
+    try:
+        logging.info(f"Downloading file from s3://{bucket_name}/{s3_file_path} to {local_file_path}")
+        s3 = boto3.client("s3")
+        
+        # Ensure local directory exists
+        os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
+        
+        s3.download_file(bucket_name, s3_file_path, local_file_path)
+        logging.info(f"File downloaded successfully to {local_file_path}")
+
+    except Exception as e:
+        logging.error(ExceptionHandler(e, sys))
+        raise ExceptionHandler(e, sys)
+
+def load_object(file_path: str):
+    """
+    Load a serialized object (pickle) from a local file path.
+    """
+    try:
+        with open(file_path, "rb") as file_obj:
+            obj = pickle.load(file_obj)
+            return obj
+    except Exception as e:
+        logging.error(ExceptionHandler(e, sys))
+        raise ExceptionHandler(e, sys)
+    
+def save_object(file_path: str, obj: object):
+    """
+    Saves a Python object to a local file using pickle.
+    It automatically creates the necessary directories if they don't exist.
+
+    Args:
+        file_path (str): The full local path where the object will be saved.
+        obj (object): The Python object to serialize and save.
+    """
+    try:
+        dir_path = os.path.dirname(file_path)
+        os.makedirs(dir_path, exist_ok=True)
+        
+        with open(file_path, "wb") as file_obj:
+            pickle.dump(obj, file_obj)
+        
+        logging.info(f"Object successfully saved at: {file_path}")
+
+    except Exception as e:
+        logging.error(ExceptionHandler(e, sys))
+        raise ExceptionHandler(e, sys)
+    
+def save_object_to_s3(s3_key: str, obj: object, bucket_name: str = "anime-recommender-system-prasoon"):
+    """
+    Serializes a Python object using pickle and saves it directly to an S3 bucket.
+
+    Args:
+        s3_key (str): The key (path) for the object in the S3 bucket.
+        obj (object): The Python object to serialize and save.
+        bucket_name (str): The name of the S3 bucket.
+    """
+    try:
+        logging.info(f"Saving object to S3: s3://{bucket_name}/{s3_key}")
+        # Serialize the object into a byte stream in memory
+        pickle_byte_obj = pickle.dumps(obj)
+        
+        s3 = boto3.client("s3")
+        s3.put_object(
+            Bucket=bucket_name,
+            Key=s3_key,
+            Body=pickle_byte_obj
+        )
+        logging.info(f"Object successfully saved to S3.")
+
+    except Exception as e:
+        logging.error(ExceptionHandler(e, sys))
+        raise ExceptionHandler(e, sys)
+
+def load_object_from_s3(s3_key: str, bucket_name: str = "anime-recommender-system-prasoon") -> object:
+    """
+    Loads a serialized object (pickle) directly from S3.
+
+    Args:
+        s3_key (str): The key (path) of the object in the S3 bucket.
+        bucket_name (str): The name of the S3 bucket.
+        
+    Returns:
+        object: The deserialized Python object.
+    """
+    try:
+        logging.info(f"Loading object from S3: s3://{bucket_name}/{s3_key}")
+        s3 = boto3.client("s3")
+        response = s3.get_object(Bucket=bucket_name, Key=s3_key)
+        
+        # Read the byte stream from the S3 object's body
+        byte_stream = response['Body'].read()
+        
+        # Deserialize the byte stream into a Python object
+        obj = pickle.loads(byte_stream)
+        
+        logging.info("Object loaded successfully from S3.")
+        return obj
+
+    except Exception as e:
+        logging.error(ExceptionHandler(e, sys))
+        raise ExceptionHandler(e, sys)

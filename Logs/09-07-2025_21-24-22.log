@@ -1,0 +1,31 @@
+[ 2025-07-09 21:24:26,212 ] 163 root - INFO - --- [TEST SETUP] Creating prerequisite artifacts ---
+[ 2025-07-09 21:24:26,212 ] 177 root - INFO - 
+--- [TEST TRAINING] Initiating Collaborative Model Training ---
+[ 2025-07-09 21:24:26,212 ] 21 root - INFO - Initializing CollaborativeModelling component.
+[ 2025-07-09 21:24:26,212 ] 54 root - INFO - Reading data from : anime-recommender-system-prasoon/Artifacts/Data_Cleaning/06-16-2025_20-05-59/Cleaned_Anime_Description.csv
+[ 2025-07-09 21:24:26,223 ] 1352 botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+[ 2025-07-09 21:24:27,501 ] 58 root - INFO - Data loaded successfully from S3!
+[ 2025-07-09 21:24:27,502 ] 54 root - INFO - Reading data from : anime-recommender-system-prasoon/Artifacts/Data_ingestion/06-14-2025_22-09-04/Anime_Ratings.csv
+[ 2025-07-09 21:25:46,398 ] 58 root - INFO - Data loaded successfully from S3!
+[ 2025-07-09 21:25:54,871 ] 33 root - INFO - Base dataframes loaded for collaborative component.
+[ 2025-07-09 21:25:54,871 ] 145 root - INFO - Initiating collaborative model training pipeline.
+[ 2025-07-09 21:25:54,872 ] 83 root - INFO - Starting Neural Network model training.
+[ 2025-07-09 21:25:54,872 ] 60 root - INFO - Loading and merging datasets for training.
+[ 2025-07-09 21:25:54,872 ] 54 root - INFO - Reading data from : anime-recommender-system-prasoon/Artifacts/Data_Cleaning/06-16-2025_20-05-59/Cleaned_Anime_Description.csv
+[ 2025-07-09 21:25:55,972 ] 58 root - INFO - Data loaded successfully from S3!
+[ 2025-07-09 21:25:55,973 ] 54 root - INFO - Reading data from : anime-recommender-system-prasoon/Artifacts/Data_ingestion/06-14-2025_22-09-04/Anime_Ratings.csv
+[ 2025-07-09 21:27:10,872 ] 58 root - INFO - Data loaded successfully from S3!
+[ 2025-07-09 21:27:36,044 ] 242 root - INFO - Saving object to S3: s3://anime-recommender-system-prasoon/Artifacts/Models/Collaborative_Models/encoders/user_ratings_encoder.pkl
+[ 2025-07-09 21:27:36,357 ] 252 root - INFO - Object successfully saved to S3.
+[ 2025-07-09 21:27:36,359 ] 242 root - INFO - Saving object to S3: s3://anime-recommender-system-prasoon/Artifacts/Models/Collaborative_Models/encoders/anime_encoder.pkl
+[ 2025-07-09 21:27:36,502 ] 252 root - INFO - Object successfully saved to S3.
+[ 2025-07-09 21:27:36,506 ] 98 root - INFO - User and Anime encoders for NN saved directly to S3.
+[ 2025-07-09 21:31:01,551 ] 242 root - INFO - Saving object to S3: s3://anime-recommender-system-prasoon/Artifacts/Models/Collaborative_Models/Neural_nets_Collaborative_models.weights.h5
+[ 2025-07-09 21:31:01,700 ] 252 root - INFO - Object successfully saved to S3.
+[ 2025-07-09 21:31:01,702 ] 115 root - INFO - Neural Network model weights uploaded to S3.
+[ 2025-07-09 21:31:02,391 ] 119 root - INFO - Starting SVD model training.
+[ 2025-07-09 21:31:02,391 ] 60 root - INFO - Loading and merging datasets for training.
+[ 2025-07-09 21:31:02,391 ] 54 root - INFO - Reading data from : anime-recommender-system-prasoon/Artifacts/Data_Cleaning/06-16-2025_20-05-59/Cleaned_Anime_Description.csv
+[ 2025-07-09 21:31:03,432 ] 58 root - INFO - Data loaded successfully from S3!
+[ 2025-07-09 21:31:03,433 ] 54 root - INFO - Reading data from : anime-recommender-system-prasoon/Artifacts/Data_ingestion/06-14-2025_22-09-04/Anime_Ratings.csv
+[ 2025-07-09 21:32:21,763 ] 58 root - INFO - Data loaded successfully from S3!

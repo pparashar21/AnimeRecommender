@@ -113,6 +113,7 @@ class DataTransformation:
             feat_df.insert(0, "anime_id", df["anime_id"].values)
             output_path = self.data_transform_config.transformed_content_data
             save_data_to_S3(feat_df, output_path)
+            logging.info(f"Data transformation done - Content based modelling data saved at Key : {output_path}")
             
             return DataTransformationArtifact(transformed_content_data=output_path)
         except Exception as e:
